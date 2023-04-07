@@ -57,6 +57,10 @@ dependencies {
     // @Valid 사용을 위한 validation
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
 
+    // Swagger 사용을 위한 Springfox
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
 }
 
 tasks.named('test') {
