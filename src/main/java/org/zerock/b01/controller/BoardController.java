@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,10 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.b01.dto.BoardListAllDTO;
-import org.zerock.b01.dto.upload.BoardDTO;
-import org.zerock.b01.dto.BoardListReplyCountDTO;
 import org.zerock.b01.dto.PageRequestDTO;
 import org.zerock.b01.dto.PageResponseDTO;
+import org.zerock.b01.dto.upload.BoardDTO;
 import org.zerock.b01.service.BoardService;
 
 import javax.validation.Valid;
@@ -49,13 +49,15 @@ public class BoardController {
 
     }
 
+
+        @PreAuthorize("hasRole('USER')") // USER 권한 사전 체크
     @GetMapping("/register")
-    private void registerGET() {
+    public void registerGET() {
 
     }
 
     @PostMapping("/register")
-    private String registerPOST(@Valid BoardDTO boardDTO,
+    public String registerPOST(@Valid BoardDTO boardDTO,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes) {
 
@@ -78,6 +80,7 @@ public class BoardController {
 
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping({"/read", "/modify"})
     public void read(Long bno,
                      PageRequestDTO pageRequestDTO,
@@ -91,6 +94,8 @@ public class BoardController {
 
     }
 
+    // 현재 로그인한 사용자와 게시물 작성자가 동일한 경우에만 권한 부여
+    @PreAuthorize("principal.username == #boardDTO.writer")
     @PostMapping("/modify")
     public String modify(PageRequestDTO pageRequestDTO,
                          @Valid BoardDTO boardDTO,
@@ -118,11 +123,12 @@ public class BoardController {
 
         redirectAttributes.addFlashAttribute("result", "modified");
 
-        redirectAttributes.addFlashAttribute("bno", boardDTO.getBno());
+        redirectAttributes.addAttribute("bno", boardDTO.getBno());
 
         return "redirect:/board/read";
     }
 
+    @PreAuthorize("principal.username == #boardDTO.writer")
     @PostMapping("/remove")
     public String remove(BoardDTO boardDTO,
                          RedirectAttributes redirectAttributes) {

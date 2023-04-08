@@ -64,6 +64,11 @@ dependencies {
     // 썸네일 사용 라이브러리
     implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.16'
 
+    // 스프링 (웹) 시큐리티
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // Thymeleaf에서 스프링 시큐리티 사용 가능 라이브러리
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
 }
 
