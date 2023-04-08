@@ -31,4 +31,5 @@ class ReplyServiceImplTest {
         log.info("replyService.register(replyDTO) = " + replyService.register(replyDTO));
     }
 
+
 }
