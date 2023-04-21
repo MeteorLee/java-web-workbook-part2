@@ -69,13 +69,11 @@ public class CustomSecurityConfig {
     }
 
 
-/*
-    // PasswordEncoder 설정
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-*/
+//    // PasswordEncoder 설정
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 
     // remember-me를 위한 토큰 레포지토리 빈
     @Bean
