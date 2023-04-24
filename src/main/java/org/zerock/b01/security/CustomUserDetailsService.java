@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.zerock.b01.domain.Member;
-import org.zerock.b01.dto.MemberSecurityDTO;
+import org.zerock.b01.security.dto.MemberSecurityDTO;
 import org.zerock.b01.repository.MemberRepository;
 
 import java.util.Optional;

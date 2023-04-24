@@ -12,10 +12,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.zerock.b01.security.CustomUserDetailsService;
 import org.zerock.b01.security.handler.Custom403Handler;
+import org.zerock.b01.security.handler.CustomSocialLoginSuccessHandler;
 
 import javax.sql.DataSource;
 
@@ -30,6 +32,11 @@ public class CustomSecurityConfig {
     // 자동 로그인 remember-me 설정 주입 필요
     private final DataSource dataSource;
     private final CustomUserDetailsService userDetailsService;
+
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new CustomSocialLoginSuccessHandler(passwordEncoder());
+    }
 
     // 로그인 없이 일단 사용할 수 있도록 처리
     @Bean
@@ -53,6 +60,11 @@ public class CustomSecurityConfig {
         // 403 권한 아닌 경우 발생하는 403 에러 처리
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler()); // 403
 
+        // OAuth2 설정
+        http.oauth2Login()
+                .loginPage("/member/login")
+                // 로그인 성공 시 핸들러
+                .successHandler(authenticationSuccessHandler());
 
         return http.build();
 
@@ -69,11 +81,11 @@ public class CustomSecurityConfig {
     }
 
 
-//    // PasswordEncoder 설정
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
+    // PasswordEncoder 설정
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     // remember-me를 위한 토큰 레포지토리 빈
     @Bean
